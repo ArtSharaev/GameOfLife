@@ -1,13 +1,7 @@
 import pygame
 from objects.Board import Board
-from objects.AliveCell import AliveCell
-from objects.BoolArray import BoolArray
 from config import *
 
-b = BoolArray()
-b.append(1)
-b.append(2)
-print(b[0])
 
 if __name__ == "__main__":
     pygame.init()
@@ -21,19 +15,36 @@ if __name__ == "__main__":
     gameboard.render(screen)
     running = True
     game_started = False
-    pygame.display.flip()
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif not game_started and event.type == pygame.MOUSEMOTION:
+            elif not game_started and\
+                    (event.type == pygame.MOUSEMOTION or
+                     event.type == pygame.MOUSEBUTTONDOWN):
                 click = pygame.mouse.get_pressed()
                 if click[0]:
                     mouse_position = mx, my = pygame.mouse.get_pos()
-                    print(gameboard.get_cell_coords(mx, my))
+                    x, y = gameboard.get_cell_coords(mx, my)
+                    gameboard.set_alive(x, y)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    game_started = True
+                    if game_started:
+                        game_started = False
+                        rm = gameboard.rendermode
+                        del gameboard
+                        gameboard = Board(DIMENSIONS)
+                    else:
+                        game_started = True
+
+                elif event.key == pygame.K_h:
+                    gameboard.change_rendermode()
+
+        if game_started:
+            gameboard.matrix_update()
+        if gameboard.is_empty():
+            game_started = False
         gameboard.render(screen)
         clock.tick(FPS)
         pygame.display.flip()
