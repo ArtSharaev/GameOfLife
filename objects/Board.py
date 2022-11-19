@@ -15,7 +15,10 @@ class Board:
         self.rendermode = rendermode
 
     def set_alive(self, x, y) -> None:
-        self.matrix[y][x] = 1
+        try:
+            self.matrix[y][x] = 1
+        except IndexError:
+            pass
 
     @staticmethod
     def get_cell_coords(x_px, y_px) -> tuple:

@@ -15,7 +15,7 @@ if __name__ == "__main__":
     gameboard.render(screen)
     running = True
     game_started = False
-
+    fps = 200
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -32,11 +32,13 @@ if __name__ == "__main__":
                 if event.key == pygame.K_SPACE:
                     if game_started:
                         game_started = False
+                        fps = 200
                         rm = gameboard.rendermode
                         del gameboard
                         gameboard = Board(DIMENSIONS)
                     else:
                         game_started = True
+                        fps = FPS
 
                 elif event.key == pygame.K_h:
                     gameboard.change_rendermode()
@@ -45,7 +47,8 @@ if __name__ == "__main__":
             gameboard.matrix_update()
         if gameboard.is_empty():
             game_started = False
+            fps = 200
         gameboard.render(screen)
-        clock.tick(FPS)
+        clock.tick(fps)
         pygame.display.flip()
     pygame.quit()
