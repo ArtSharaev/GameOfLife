@@ -1,5 +1,6 @@
 from config import *
 import pygame
+import random
 
 
 class Board:
@@ -33,6 +34,17 @@ class Board:
                 cell_value = self.cell_update(x, y)
                 new_row.append(cell_value)
             temp.append(new_row)
+        self.matrix = temp
+
+    def random_matrix_generation(self) -> None:
+        """Генерация матрицы, случайно заполненной 1 и 0"""
+        temp = []
+        for y in range(self.size_y):
+            rand_row = []
+            for x in range(self.size_x):
+                cell = random.choice([0, 0, 0, 1])
+                rand_row.append(cell)
+            temp.append(rand_row)
         self.matrix = temp
 
     def cell_update(self, x, y) -> int:

@@ -39,9 +39,10 @@ if __name__ == "__main__":
                     else:
                         game_started = True
                         fps = FPS
-
                 elif event.key == pygame.K_h:
                     gameboard.change_rendermode()
+                elif event.key == pygame.K_r and not game_started:
+                    gameboard.random_matrix_generation()
 
         if game_started:
             gameboard.matrix_update()
