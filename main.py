@@ -39,6 +39,10 @@ if __name__ == "__main__":
                     mouse_position = mx, my = pygame.mouse.get_pos()
                     x, y = gameboard.get_cell_coords(mx, my)
                     gameboard.set_alive(x, y)
+                elif click[2]:
+                    mouse_position = mx, my = pygame.mouse.get_pos()
+                    x, y = gameboard.get_cell_coords(mx, my)
+                    gameboard.set_empty(x, y)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:  # старт или остановка игры
                     if game_started:
