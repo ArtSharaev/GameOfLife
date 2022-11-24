@@ -1,4 +1,5 @@
 from config import *
+from pprint import pprint
 import pygame
 import random
 
@@ -14,6 +15,9 @@ class Board:
             row = [0] * self.size_x
             self.matrix.append(row)
         self.rendermode = rendermode
+
+    def __repr__(self):
+        return f"Board with size {self.size_x}x{self.size_y}."
 
     def set_alive(self, x, y) -> None:
         """Поставить живую клетку - работает c ЛКМ"""
