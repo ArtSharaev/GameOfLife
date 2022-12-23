@@ -1,5 +1,4 @@
 from config import *
-from pprint import pprint
 import pygame
 import random
 

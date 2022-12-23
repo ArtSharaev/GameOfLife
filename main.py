@@ -4,7 +4,6 @@ from config import *
 
 
 def draw_text(screen, text) -> None:
-    """Рисуем счётчик поколений"""
     font_size = sum(DIMENSIONS) // 2 // 20
     font = pygame.font.SysFont('arial.ttf', font_size)
     text_surface = font.render(text, True, (255, 255, 255))
