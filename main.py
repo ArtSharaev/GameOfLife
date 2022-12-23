@@ -10,6 +10,11 @@ def draw_text(screen, text) -> None:
     text_rect = text_surface.get_rect()
     text_rect.topleft = (0, 0)
     screen.blit(text_surface, text_rect)
+    if game_paused:
+        is_paused_text_surface = font.render("paused", True, (255, 255, 255))
+        is_paused_text_rect = is_paused_text_surface.get_rect()
+        is_paused_text_rect.topleft = (0, font_size)
+        screen.blit(is_paused_text_surface, is_paused_text_rect)
 
 
 if __name__ == "__main__":
@@ -22,7 +27,7 @@ if __name__ == "__main__":
 
     gameboard = Board(DIMENSIONS)
     gameboard.render(screen)
-    game_started = False
+    game_paused = False
     generation_number = 0
     fps = 200
 
@@ -31,9 +36,9 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif not game_started and \
-                    (event.type == pygame.MOUSEMOTION or
-                     event.type == pygame.MOUSEBUTTONDOWN):  # рисование клеток
+            elif ((game_paused or gameboard.is_empty()) and
+                  (event.type == pygame.MOUSEMOTION or
+                   event.type == pygame.MOUSEBUTTONDOWN)):  # рисование клеток
                 click = pygame.mouse.get_pressed()
                 if click[0]:
                     mouse_position = mx, my = pygame.mouse.get_pos()
@@ -45,28 +50,30 @@ if __name__ == "__main__":
                     gameboard.set_empty(x, y)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:  # старт или остановка игры
-                    if game_started:
-                        game_started = False
-                        rm = gameboard.rendermode
-                        del gameboard
-                        gameboard = Board(DIMENSIONS)
-                        gameboard.rendermode = rm
-                        fps = 200  # поднимаем fps на время рисования
-                    else:
-                        game_started = True
-                        generation_number = 0
+                    if game_paused:
+                        game_paused = False
                         fps = FPS  # опускаем fps чтобы картинка не мерцала
+                    else:
+                        game_paused = True
+                        fps = 200  # поднимаем fps на время рисования
+                elif event.key == pygame.K_c:  # очистка холста
+                    game_paused = False
+                    rm = gameboard.rendermode
+                    del gameboard
+                    gameboard = Board(DIMENSIONS)
+                    gameboard.rendermode = rm
                 elif event.key == pygame.K_h:  # разметка клеток
                     gameboard.change_rendermode()
-                elif event.key == pygame.K_r and not game_started:  # рандом
+                elif event.key == pygame.K_r and gameboard.is_empty():  # рандом
                     gameboard.random_matrix_generation()
 
-        if game_started:
+        if not game_paused:
             gameboard.matrix_update()
             generation_number += 1
 
         if gameboard.is_empty():
-            game_started = False
+            game_paused = True
+            generation_number = 0
             fps = 200  # поднимаем fps на время рисования
         gameboard.render(screen)
         draw_text(screen, str(generation_number))

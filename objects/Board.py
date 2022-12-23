@@ -34,17 +34,6 @@ class Board:
         """Узнать координаты клетки на матрице по координатам в пкс"""
         return x_px // CELL_SIZE, y_px // CELL_SIZE
 
-    def matrix_update(self) -> None:
-        """Обновление матрицы каждый игровой цикл"""
-        temp = []
-        for y in range(self.size_y):
-            new_row = []
-            for x in range(self.size_x):
-                cell_value = self.cell_update(x, y)
-                new_row.append(cell_value)
-            temp.append(new_row)
-        self.matrix = temp
-
     def random_matrix_generation(self) -> None:
         """Генерация матрицы, случайно заполненной 0 и 1"""
         temp = []
@@ -56,6 +45,17 @@ class Board:
             temp.append(rand_row)
         self.matrix = temp
 
+    def matrix_update(self) -> None:
+        """Обновление матрицы каждый игровой цикл"""
+        temp = []
+        for y in range(self.size_y):
+            new_row = []
+            for x in range(self.size_x):
+                cell_value = self.cell_update(x, y)
+                new_row.append(cell_value)
+            temp.append(new_row)
+        self.matrix = temp
+
     def cell_update(self, x, y) -> int:
         """Обработка соседства Мура для клетки"""
         indexes = [(-1, -1), (-1, 0), (-1, 1), (0, 1),
@@ -63,9 +63,10 @@ class Board:
         counter = 0
         for i in indexes:
             ky, kx = i
-            if (0 <= x + kx < self.size_x
-                    and 0 <= y + ky < self.size_y):
+            try:
                 counter += self.matrix[y + ky][x + kx]
+            except IndexError:
+                pass
         if 2 <= counter <= 3 and self.matrix[y][x] == 1:
             return 1
         elif counter > 3 and self.matrix[y][x] == 1:
