@@ -1,6 +1,12 @@
 import pygame
-from objects.Board import Board
+import sys
+from objects.board import Board
 from config import *
+
+
+def terminate():
+    pygame.quit()
+    sys.exit()
 
 
 def draw_text(screen, text) -> None:
@@ -19,7 +25,7 @@ def draw_text(screen, text) -> None:
 
 if __name__ == "__main__":
     pygame.init()
-    pygame.display.set_caption('theLife')
+    pygame.display.set_caption('Game of Life')
     clock = pygame.time.Clock()
 
     screen = pygame.display.set_mode(DIMENSIONS)
@@ -35,7 +41,7 @@ if __name__ == "__main__":
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                terminate()
             elif ((game_paused or gameboard.is_empty()) and
                   (event.type == pygame.MOUSEMOTION or
                    event.type == pygame.MOUSEBUTTONDOWN)):  # рисование клеток
@@ -79,4 +85,3 @@ if __name__ == "__main__":
         draw_text(screen, str(generation_number))
         clock.tick(fps)
         pygame.display.flip()
-    pygame.quit()
