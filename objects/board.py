@@ -66,10 +66,9 @@ class Board:
         counter = 0
         for i in indexes:
             ky, kx = i
-            try:
+            if (0 <= x + kx < self.size_x
+                    and 0 <= y + ky < self.size_y):
                 counter += self.matrix[y + ky][x + kx]
-            except IndexError:
-                pass
         if 2 <= counter <= 3 and self.matrix[y][x] == 1:
             return 1
         elif counter > 3 and self.matrix[y][x] == 1:
